@@ -10,16 +10,22 @@ class DeterminantMultiflow(Thread):
         self.result = None
 
         size_arr = len(arr)
-        if size_arr == 1: return arr[0][0]
-        result = 0
-        for index_x in range(size_arr):
-            arr_deepcopy = deepcopy(arr)
-            del (arr_deepcopy[0])
-            for i in range(len(arr_deepcopy)):
-                del (arr_deepcopy[i][index_x])
-            result += arr[0][index_x] * (-1 if index_x & 1 else 1) * det(arr_deepcopy)
+        if size_arr == 1:
+            self.result = arr[0][0]
+        else:
+            result = 0
+            for index_x in range(size_arr):
+                arr_deepcopy = deepcopy(arr)
+                del (arr_deepcopy[0])
+                for i in range(len(arr_deepcopy)):
+                    del (arr_deepcopy[i][index_x])
+                t = DeterminantMultiflow(arr_deepcopy)
+                t.start()
+                t.join()
 
-        self.result = result
+                result += arr[0][index_x] * (-1 if index_x & 1 else 1) * t.result
+
+            self.result = result
 
 
 
