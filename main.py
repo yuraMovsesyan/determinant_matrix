@@ -1,5 +1,6 @@
 from random import choice
 from copy import deepcopy
+import time
 
 size = int(input("Input matrix size: "))
 
@@ -24,4 +25,6 @@ for y in a:
     for x in y:
         print(str(x) + " " * (len(str(max_choice)) - len(str(x))), end='')
     print("")
+start_time = time.time()
 print("Determinant:", det(a))
+print("--- %s seconds ---" % (time.time() - start_time))
