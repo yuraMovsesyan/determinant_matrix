@@ -21,8 +21,7 @@ def det(arr):
 a = [[choice(range(min_choice, max_choice)) for i in range(size)] for j in range(size)]
 
 for y in a:
-    print("|", end="")
     for x in y:
         print(str(x) + " " * (len(str(max_choice)) - len(str(x))), end='')
-    print("|")
+    print("")
 print("Determinant:", det(a))
