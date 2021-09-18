@@ -1,8 +1,11 @@
 from random import choice
 from copy import deepcopy
 
-print("Input matrix size:")
-size=int(input())
+size = int(input("Input matrix size: "))
+
+min_choice = 1
+max_choice = 100
+
 def det(arr):
     size_arr = len(arr)
     if size_arr == 1: return arr[0][0]
@@ -15,7 +18,11 @@ def det(arr):
         result += arr[0][index_x] * (-1 if index_x & 1 else 1 ) * det(arr_deepcopy)
     return result
 
-a = [[choice(range(1, 100)) for i in range(size)] for j in range(size)]
+a = [[choice(range(min_choice, max_choice)) for i in range(size)] for j in range(size)]
 
-print("\n".join([" ".join([str(item) for item in row]) for row in a]))
-print(det(a))
+for y in a:
+    print("|", end="")
+    for x in y:
+        print(str(x) + " " * (len(str(max_choice)) - len(str(x))), end='')
+    print("|")
+print("Determinant:", det(a))
