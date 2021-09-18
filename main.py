@@ -1,7 +1,7 @@
 from random import choice
 from copy import deepcopy
 from threading import Thread
-
+import time
 
 class DeterminantMultiflow(Thread):
 
@@ -47,21 +47,24 @@ for y in a:
         print(str(x) + " " * (len(str(max_choice)) - len(str(x))), end='')
     print("")
 
-print("Determinant:", det(a))
-print("Determinant:", det(a))
-print("Determinant:", det(a))
 
-t1 = DeterminantMultiflow(a)
-t1.start()
-t1.join()
+start_time = time.time()
 
-t2 = DeterminantMultiflow(a)
-t2.start()
-t2.join()
+size_arr = len(a)
+result = 0
+DetMul = [DeterminantMultiflow(a)] * size_arr
+for index_x in range(size_arr):
+    arr_deepcopy = deepcopy(a)
+    del (arr_deepcopy[0])
+    for i in range(len(arr_deepcopy)):
+        del (arr_deepcopy[i][index_x])
+    DetMul[index_x] = DeterminantMultiflow(arr_deepcopy)
+    DetMul[index_x].start()
+    DetMul[index_x].join()
 
-t3 = DeterminantMultiflow(a)
-t3.start()
-t3.join()
+for index_x in range(size_arr):
+    result += a[0][index_x] * (-1 if index_x & 1 else 1 ) * DetMul[index_x].result
 
+print("Det:", result)
 
-print("t1:", t1.result, "t2:", "t2:", t2.result, "t3:", t3.result)
+print("--- %s seconds ---" % (time.time() - start_time))
