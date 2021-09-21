@@ -41,6 +41,7 @@ a = [[choice(range(min_choice, max_choice)) for i in range(size)] for j in range
 for y in a:
     for x in y:
         print(str(x) + " " * (len(str(max_choice)) - len(str(x))), end='')
+        if max_choice < 10: print("", end=' ')
     print("")
 
 start_time = time.time()
