@@ -1,6 +1,5 @@
 from random import choice
 import time
-import itertools
 
 size = int(input("Input matrix size: "))
 
