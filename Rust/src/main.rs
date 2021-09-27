@@ -22,6 +22,4 @@ fn main() {
 
     println!("{:?}", vec);
 
-    
-
 }
