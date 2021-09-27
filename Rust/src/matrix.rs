@@ -46,7 +46,7 @@ pub fn add_column(matrix: &mut Vec<Vec<f64>>, a: (usize, f64), b: (usize, f64), 
     }
 }
 
-pub fn get_column(matrix: Vec<Vec<f64>>, a: usize) -> Vec<f64> {
+pub fn get_column(matrix: &mut Vec<Vec<f64>>, a: usize) -> Vec<f64> {
     let a: usize = a - 1;
     let mut vec_column:Vec<f64> = Vec::new();
 
@@ -56,8 +56,6 @@ pub fn get_column(matrix: Vec<Vec<f64>>, a: usize) -> Vec<f64> {
 
     vec_column
 }
-
-
 
 pub fn get_null_matrix(size: usize) -> Vec<Vec<f64>> {
     let mut null_matrix: Vec<Vec<f64>>= Vec::new();
@@ -71,4 +69,19 @@ pub fn get_null_matrix(size: usize) -> Vec<Vec<f64>> {
     }
 
     null_matrix
+}
+
+pub fn get_index_min(vec: &Vec<f64>, start: usize) -> usize {
+    let len = vec.len();
+    let mut min = vec[start];
+    let mut min_id = start;
+
+    for i in start..len {
+        if vec[i] < min && vec[i] != 0.{
+            min = vec[i];
+            min_id = i;
+        }
+    }
+
+    min_id
 }
