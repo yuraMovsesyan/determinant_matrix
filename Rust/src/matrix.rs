@@ -12,11 +12,13 @@ pub fn print(matrix: &mut Vec<Vec<f64>>) {
 }
 
 pub fn swap_row(matrix: &mut Vec<Vec<f64>>, a: usize, b: usize) {
-    for i in 1..(matrix[0][2] + 1.) as usize{
+    for i in 0..matrix[0][2] as usize{
         let c = matrix[a][i];
         matrix[a][i] = matrix[b][i];
         matrix[b][i] = c;
     }
+
+    matrix[0][0] = if matrix[0][0] == 0. { 1. } else { 0. };
 }
 
 pub fn swap_column(matrix: &mut Vec<Vec<f64>>, a: usize, b: usize) {
@@ -27,10 +29,12 @@ pub fn swap_column(matrix: &mut Vec<Vec<f64>>, a: usize, b: usize) {
         matrix[i][a] = matrix[i][b];
         matrix[i][b] = c;
     }
+
+    matrix[0][0] = if matrix[0][0] == 0. { 1. } else { 0. };
 }
 
 pub fn add_row(matrix: &mut Vec<Vec<f64>>, a: (usize, f64), b: (usize, f64), s: usize) {
-    for i in 0..(matrix[0][2] + 1.) as usize{
+    for i in 0..matrix[0][2] as usize{
         let c = matrix[a.0][i] * a.1 + matrix[b.0][i] * b.1;
         matrix[s][i] = c;
     }
@@ -47,11 +51,10 @@ pub fn add_column(matrix: &mut Vec<Vec<f64>>, a: (usize, f64), b: (usize, f64), 
 }
 
 pub fn get_column(matrix: &mut Vec<Vec<f64>>, a: usize) -> Vec<f64> {
-    let a: usize = a - 1;
     let mut vec_column:Vec<f64> = Vec::new();
 
     for i in 1..(matrix[0][1] + 1.) as usize{
-        vec_column.push(matrix[i][0]);
+        vec_column.push(matrix[i][a]);
     }
 
     vec_column
@@ -84,4 +87,44 @@ pub fn get_index_min(vec: &Vec<f64>, start: usize) -> usize {
     }
 
     min_id
+}
+
+pub fn det(matrix: Vec<Vec<f64>>) -> f64 {
+    let size = matrix[0][1];
+    let mut matrix = matrix;
+
+    let mut result = 1.;
+
+    for i in 0..size as usize {
+        let vec = get_column(&mut matrix, i);
+
+        let min_id = get_index_min(&vec, i);
+
+        if matrix[min_id + 1][i] != matrix[i + 1][i]{
+            swap_row(&mut matrix, min_id + 1, i + 1);
+            println!("swap {} {}", min_id + 1, i + 1);
+        }
+
+        for j in (i + 1)..(size) as usize{
+            let k = (0. - matrix[j + 1][i]) / matrix[i + 1][i];
+            add_row(&mut matrix, (i + 1, k), (j + 1, 1.), j + 1);
+        }
+
+        print!("{:?} {}\n ", matrix[i + 1][i], min_id);
+
+        result *= matrix[i + 1][i];
+    }
+
+    print(&mut matrix);
+
+    let k = if matrix[0][0] == 0. { 1. } else { -1. };
+    result *= k;
+
+    let res = result;
+    if res.floor() + 0.5 < result{
+        return res.ceil();
+    }
+    else{
+        return res.floor();
+    }
 }
