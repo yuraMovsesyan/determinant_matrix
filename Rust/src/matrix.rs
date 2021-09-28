@@ -74,7 +74,7 @@ pub fn get_null_matrix(size: usize) -> Vec<Vec<f64>> {
     null_matrix
 }
 
-pub fn get_index_min(vec: &Vec<f64>, start: usize) -> usize {
+pub fn get_index_min_down(vec: &Vec<f64>, start: usize) -> usize {
     let len = vec.len();
     let mut min = vec[start];
     let mut min_id = start;
@@ -98,7 +98,7 @@ pub fn det(matrix: Vec<Vec<f64>>) -> f64 {
     for i in 0..size as usize {
         let vec = get_column(&mut matrix, i);
 
-        let min_id = get_index_min(&vec, i);
+        let min_id = get_index_min_down(&vec, i);
 
         if matrix[min_id + 1][i] != matrix[i + 1][i]{
             swap_row(&mut matrix, min_id + 1, i + 1);
@@ -127,4 +127,105 @@ pub fn det(matrix: Vec<Vec<f64>>) -> f64 {
     else{
         return res.floor();
     }
+}
+
+pub fn inv(matrix: Vec<Vec<f64>>){
+    let size = matrix[0][1];
+    let mut matrix = matrix;
+
+    let mut null_matrix = get_null_matrix(size as usize);
+
+    let mut result = 1.;
+
+    for i in 0..size as usize {
+        let vec = get_column(&mut matrix, i);
+
+        let min_id = get_index_min_down(&vec, i);
+        /*
+        if matrix[min_id + 1][i] != matrix[i + 1][i]{
+            swap_row(&mut matrix, min_id + 1, i + 1);
+            swap_row(&mut null_matrix, min_id + 1, i + 1);
+            println!("swap {} {}", min_id + 1, i + 1);
+        }
+        */
+        if i == 0{
+            let id_end = size as usize;
+            for j in 2..size as usize{
+                let k = (0. - matrix[j][id_end - 1]) / matrix[1][id_end - 1];
+                add_row(&mut matrix, (1, k), (j, 1.), j);
+
+                add_row(&mut null_matrix, (1, k), (j, 1.), j);
+            }
+
+            let k = (1. - matrix[id_end][id_end - 1]) / matrix[1][id_end - 1];
+            add_row(&mut matrix, (id_end, 1.), (1, k), id_end);
+
+            add_row(&mut null_matrix, (id_end, 1.), (1, k), id_end);
+
+            let k = (0. - matrix[1][id_end - 1]) / matrix[id_end][id_end - 1];
+            add_row(&mut matrix, (1, 1.), (id_end, k), 1);
+
+            add_row(&mut null_matrix, (1, 1.), (id_end, k), 1);
+
+            println!("----------------------");
+            print(&mut matrix);
+            println!("----------------------");
+        }
+
+        if matrix[i + 1][i] != 1.{
+            for j in (i + 1)..(size) as usize{
+                if matrix[j + 1][i] != 0.{
+                    let k = (1. - matrix[i + 1][i]) / matrix[j + 1][i];
+                    add_row(&mut matrix, (i + 1, 1.), (j + 1, k), i + 1);
+
+                    add_row(&mut null_matrix, (i + 1, 1.), (j + 1, k), i + 1);
+
+                    
+                    println!("-----3333333333-----------------");
+                    print(&mut matrix);
+                    println!("----------33333333333------------");
+                    break;
+                }
+            }
+        }
+
+        if i + 1 == size as usize{
+            let k = (1. - matrix[i + 1][i]) / matrix[i + 1][i];
+            add_column(&mut matrix, (i + 1, 1.), (i + 1, k), i + 1);
+
+            add_column(&mut null_matrix, (i + 1, 1.), (i + 1, k), i + 1);
+
+            
+            println!("-----3333333333-----------------");
+            print(&mut matrix);
+            println!("----------33333333333------------");
+        }
+
+        
+        for j in (i + 1)..(size) as usize{
+            let k = (0. - matrix[j + 1][i]) / matrix[i + 1][i];
+            add_row(&mut matrix, (i + 1, k), (j + 1, 1.), j + 1);
+
+            add_row(&mut null_matrix, (i + 1, k), (j + 1, 1.), j + 1);
+        }
+
+        print!("{:?} {}\n ", matrix[i + 1][i], min_id);
+    }
+
+    print(&mut matrix);
+    print(&mut null_matrix);
+
+    let size = matrix[0][2];
+
+    for i in 0..size as usize {
+        for j in 0..i as usize{
+            let k = (0. - matrix[j + 1][i]) / matrix[i + 1][i];
+            add_row(&mut matrix, (i + 1, k), (j + 1, 1.), j + 1);
+
+            add_row(&mut null_matrix, (i + 1, k), (j + 1, 1.), j + 1);
+        }
+    }
+
+    print(&mut matrix);
+    print(&mut null_matrix);
 }

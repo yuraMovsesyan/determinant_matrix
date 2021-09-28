@@ -12,4 +12,6 @@ fn main() {
 
     println!("Det: {}", det);
 
+    matrix::inv(matrix.clone());
+
 }
