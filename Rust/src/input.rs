@@ -34,6 +34,6 @@ pub fn matrix(size: u32) -> Vec<Vec<f64>>{
             break;
         }
     }
-
+    matrix[0][2] = matrix[1].len() as f64;
     matrix
 }

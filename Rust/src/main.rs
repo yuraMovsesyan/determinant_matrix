@@ -7,11 +7,19 @@ fn main() {
 
     let mut matrix = input::matrix(size);
 
-    let det = matrix::det(matrix.clone());
+    let mut rank = matrix::step(matrix.clone());
     matrix::print(&mut matrix);
 
-    println!("Det: {}", det);
+    matrix::print(&mut rank);
 
-    matrix::inv(matrix.clone());
+    let le = matrix[1].len();
+
+    let v:Vec<f64> = matrix::get_column(&mut matrix, le - 1);
+    
+
+
+    println!("line: {:?}",v)
+
+    //matrix::inv(matrix.clone());
 
 }

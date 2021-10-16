@@ -6,7 +6,7 @@ pub fn print(matrix: &mut Vec<Vec<f64>>) {
             f += 1;
             continue;
         }
-        println!("{:?}", i)
+        println!("{:?}", i);
     }
     println!("");
 }
@@ -228,4 +228,27 @@ pub fn inv(matrix: Vec<Vec<f64>>){
 
     print(&mut matrix);
     print(&mut null_matrix);
+}
+
+pub fn step(matrix: Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+    let height = matrix[0][1] as usize;
+    let width=matrix[0][2] as usize;
+
+    let mut matrix = matrix;
+    let mut w = 0 as usize;
+
+    for h in 1..height {
+        while matrix[h][w] == 0. {
+            if w < width - 1{
+                w += 1;
+            }
+        }
+
+        for hh in (h + 1)..(height + 1){
+            let k = (0. - matrix[hh][w]) / matrix[h][w];
+            add_row(&mut matrix, (h, k), (hh, 1.), hh);
+        }
+    }
+
+    matrix
 }
