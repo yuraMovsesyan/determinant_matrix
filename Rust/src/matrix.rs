@@ -252,3 +252,21 @@ pub fn step(matrix: Vec<Vec<f64>>) -> Vec<Vec<f64>> {
 
     matrix
 }
+
+pub fn rank(matrix: Vec<Vec<f64>>) -> i32 {
+    let mut matrix = step(matrix.clone());
+    let matrix_len = matrix[1].len();
+
+    let matrix_end_vec = get_column(&mut matrix, matrix_len - 1);
+
+    let mut sum = 0;
+    for elem in matrix_end_vec{
+        if elem == 0.{
+            continue;
+        }
+
+        sum += 1;
+    }
+
+    sum
+}
