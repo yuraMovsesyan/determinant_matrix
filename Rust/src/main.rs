@@ -7,9 +7,9 @@ fn main() {
 
     let mut matrix = input::matrix(size);
 
-    let rank = matrix::rank(matrix.clone());
+    let kramer= matrix::kramer(matrix.clone());
     matrix::print(&mut matrix);
 
-    println!("rank: {}", rank);
+    println!("kramer: {:?}", kramer);
 
 }

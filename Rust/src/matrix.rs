@@ -60,6 +60,28 @@ pub fn get_column(matrix: &mut Vec<Vec<f64>>, a: usize) -> Vec<f64> {
     vec_column
 }
 
+pub fn set_column(matrix: Vec<Vec<f64>>, val_vec: Vec<f64>, index: usize) -> Vec<Vec<f64>>{
+
+    let mut matrix = matrix;
+
+    let height = matrix[0][1] as usize;
+
+    for h in 1..(height + 1){
+        matrix[h][index] = val_vec[h - 1];
+    }
+
+    matrix
+}
+
+pub fn remove_column(matrix: Vec<Vec<f64>>, index: usize) -> Vec<Vec<f64>>{
+    let mut matrix = matrix;
+    let height = matrix[0][1] as usize;
+    matrix[0][2] = matrix[0][2] - 1.;
+    for id in 1..(height + 1){
+        matrix[id].remove(index);
+    }
+    matrix
+}
 pub fn get_null_matrix(size: usize) -> Vec<Vec<f64>> {
     let mut null_matrix: Vec<Vec<f64>>= Vec::new();
     let info:Vec<f64> = vec![0., size as f64, size as f64];
@@ -102,7 +124,7 @@ pub fn det(matrix: Vec<Vec<f64>>) -> f64 {
 
         if matrix[min_id + 1][i] != matrix[i + 1][i]{
             swap_row(&mut matrix, min_id + 1, i + 1);
-            println!("swap {} {}", min_id + 1, i + 1);
+            //println!("swap {} {}", min_id + 1, i + 1);
         }
 
         for j in (i + 1)..(size) as usize{
@@ -110,12 +132,12 @@ pub fn det(matrix: Vec<Vec<f64>>) -> f64 {
             add_row(&mut matrix, (i + 1, k), (j + 1, 1.), j + 1);
         }
 
-        print!("{:?} {}\n ", matrix[i + 1][i], min_id);
+        //print!("{:?} {}\n ", matrix[i + 1][i], min_id);
 
         result *= matrix[i + 1][i];
     }
 
-    print(&mut matrix);
+    //print(&mut matrix);
 
     let k = if matrix[0][0] == 0. { 1. } else { -1. };
     result *= k;
@@ -262,11 +284,38 @@ pub fn rank(matrix: Vec<Vec<f64>>) -> i32 {
     let mut sum = 0;
     for elem in matrix_end_vec{
         if elem == 0.{
-            continue;
+            break;
         }
 
         sum += 1;
     }
 
     sum
+}
+
+pub fn kramer(matrix: Vec<Vec<f64>>) -> Vec<f64>{
+    let mut matrix = matrix;
+    let width = matrix[0][2] as usize;
+    let vec_ratio = get_column(&mut matrix, width - 1);
+
+
+    let mut result:Vec<f64> = Vec::new();
+
+    let mut matrix = remove_column(matrix.clone(), width - 1);
+    let matrix_det = det(matrix.clone());
+
+    let width = matrix[0][2] as usize;
+
+    for w in 0..width {
+
+        let delta = set_column(matrix.clone(), vec_ratio.clone(), w);
+
+        let delta_det = det(delta.clone());
+
+        let res = delta_det / matrix_det;
+
+        result.push(res);
+    }
+
+    result
 }
