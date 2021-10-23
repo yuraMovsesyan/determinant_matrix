@@ -259,17 +259,40 @@ pub fn step(matrix: Vec<Vec<f64>>) -> Vec<Vec<f64>> {
     let mut matrix = matrix;
     let mut w = 0 as usize;
 
-    for h in 1..height {
+    for h in 1..(height + 1) {
         while matrix[h][w] == 0. {
-            if w < width - 1{
+            let vec = get_column(&mut matrix, w);
+
+            println!("vec {:?}, {}, {}", &vec[h..height], vec.len(), height - h);
+            
+            if height - h == 0 { break; }
+            for i in (h + 1)..(height + 1){
+                println!("!!!!--- {}, i = {}", matrix[i][w], i);
+                if matrix[i][w] != 0.{
+                    println!("--- {}", matrix[i][w]);
+                    swap_row(&mut matrix, i, h);
+                    print(&mut matrix);
+                    break;
+                }
+            }
+
+            if width - w > 1 && matrix[h][w] == 0.{
                 w += 1;
             }
+
         }
+
+
+        println!("{}", matrix[h][w]);
 
         for hh in (h + 1)..(height + 1){
             let k = (0. - matrix[hh][w]) / matrix[h][w];
             add_row(&mut matrix, (h, k), (hh, 1.), hh);
         }
+
+
+        if width - w == 1 { break; }
+        else{ w += 1;}
     }
 
     matrix
